@@ -10,10 +10,6 @@
 <html>
     <jsp:include page="Templates/head.jsp"></jsp:include>
     <%
-        String[] kidNames = new String[0];
-        String[] kidLastNames = null;
-        String[] motherNames = null;
-        String[] motherLastNames = null;
         int code = 0;
         TempMatricula tm = null;
         if (request.getAttribute("code") != null) {
@@ -28,7 +24,10 @@
         <%%>
         <div class="ui grid matricula">
             <div class="three wide column"></div>
-            <input hidden="" value="" id="idRegistro" name="idRegistro">
+            <input hidden="" id="idRegistro" name="idRegistro" 
+                   value="<%if (code == 3) {
+                           out.print(tm.getId_tempMatricula());
+                       }%>">
             <div class="ten wide column">
                 <!-- Steps -->
                 <div class="ui five top attached ordered steps">
@@ -113,19 +112,31 @@
                                 <label>Seleccione una opcion en caso de ser:</label>
                                 <div class="field">
                                     <div class="ui radio checkbox optional">
-                                        <input type="radio" name="familyCon" value="1" tabindex="0" class="hidden">
+                                        <input type="radio" name="familyCon" value="1" tabindex="0" class="hidden" 
+                                               <%if (code == 3 && tm.getMotherStatus() == 1 && tm.getFatherStatus() == 0) {
+                                               %>checked="checked"<%
+                                                   }
+                                               %>>
                                         <label>Madre cabeza de hogar</label>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <div class="ui radio checkbox optional">
-                                        <input type="radio" name="familyCon" value="2" tabindex="0" class="hidden">
+                                        <input type="radio" name="familyCon" value="2" tabindex="0" class="hidden" 
+                                               <%if (code == 3 && tm.getMotherStatus() == 0 && tm.getFatherStatus() == 1) {
+                                               %>checked="checked"<%
+                                                   }
+                                               %>>
                                         <label>Padre cabeza de hogar</label>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <div class="ui radio checkbox optional">
-                                        <input type="radio" name="familyCon" value="3" tabindex="0" class="hidden" checked="checked">
+                                        <input type="radio" name="familyCon" value="3" tabindex="0" class="hidden" 
+                                               <%if ((code == 3 && tm.getMotherStatus() == 1 && tm.getFatherStatus() == 1) || (code == 0)) {
+                                               %>checked="checked"<%
+                                                   }
+                                               %>>
                                         <label>Ninguna</label>
                                     </div>
                                 </div>
@@ -267,10 +278,16 @@
                             <label>Nombres:</label>
                             <div class="two fields">
                                 <div class="field">
-                                    <input type="text" name="mName" id="mName" placeholder="Primer Nombre">
+                                    <input type="text" name="mName" id="mName" placeholder="Primer Nombre" 
+                                           value="<%if (code == 3 && tm.getMotherName() != null) {
+                                                   out.print(tm.getMotherName());
+                                               }%>">
                                 </div>
                                 <div class="field">
-                                    <input type="text" name="mName2" id="mName2" placeholder="Segundo Nombre">
+                                    <input type="text" name="mName2" id="mName2" placeholder="Segundo Nombre" 
+                                           value="<%if (code == 3 && tm.getMotherNam2() != null) {
+                                                   out.print(tm.getMotherNam2());
+                                               }%>">
                                 </div>
                             </div>                            
                         </div>
@@ -278,10 +295,16 @@
                             <label>Apellidos:</label>
                             <div class="two fields">
                                 <div class="field">
-                                    <input type="text" name="mLastName" id="mLastName" placeholder="Primer Apellido">
+                                    <input type="text" name="mLastName" id="mLastName" placeholder="Primer Apellido" 
+                                           value="<%if (code == 3 && tm.getMotherLastname() != null) {
+                                                   out.print(tm.getMotherLastname());
+                                               }%>">
                                 </div>
                                 <div class="field">
-                                    <input type="text" name="mLastName2" id="mLastName2" placeholder="Segundo Apellido">
+                                    <input type="text" name="mLastName2" id="mLastName2" placeholder="Segundo Apellido" 
+                                           value="<%if (code == 3 && tm.getMotherLastname2() != null) {
+                                                   out.print(tm.getMotherLastname2());
+                                               }%>">
                                 </div>
                             </div>
                         </div>
@@ -293,8 +316,8 @@
                                         <div class="ui input left icon">
                                             <i class="calendar icon"></i>
                                             <input type="text" placeholder="Fecha" readonly="true" id="mDate" name="mDate" 
-                                                   value="<%if (code == 3 && tm.getKidDate() != null) {
-                                                           out.print(tm.getKidDate().toString());
+                                                   value="<%if (code == 3 && tm.getMotherDate() != null) {
+                                                           out.print(tm.getMotherDate().toString());
                                                        }%>">
                                         </div>
                                     </div>
@@ -304,7 +327,7 @@
                                     <div class="ui selection dropdown">
                                         <input type="hidden" name="mLugarNacimiento" id="mLugarNacimiento" 
                                                value="<%if (code == 3) {
-                                                       out.print(tm.getKidBirthLocation());
+                                                       out.print(tm.getMotherBirthLocation());
                                                    }%>">
                                         <i class="dropdown icon"></i>
                                         <div class="default text" data-value="0">Seleccione...</div>
@@ -320,7 +343,10 @@
                             <div class="four wide field">
                                 <label>Tipo de Documento:</label>
                                 <div class="ui selection dropdown">
-                                    <input type="hidden" name="mDocumentType" id="mDocumentType">
+                                    <input type="hidden" name="mDocumentType" id="mDocumentType" 
+                                           value="<%if (code == 3) {
+                                                   out.print(tm.getMotherDocumentType());
+                                               }%>">
                                     <i class="dropdown icon"></i>
                                     <div class="default text" data-value="0">Seleccione...</div>
                                     <div class="menu">
@@ -332,41 +358,61 @@
                             </div>
                             <div class="six wide field">
                                 <label>Numero de Documento:</label>
-                                <input type="text" name="mDocument" id="mDocument" placeholder="">
+                                <input type="text" name="mDocument" id="mDocument" placeholder="" 
+                                       value="<%if (code == 3 && tm.getMotherDocument() != null) {
+                                               out.print(tm.getMotherDocument());
+                                           }%>">
                             </div>                            
                             <div class="six wide field">
                                 <label>RH:</label>
-                                <input type="text" name="mRH" id="mRH" placeholder="">
+                                <input type="text" name="mRH" id="mRH" placeholder="" 
+                                       value="<%if (code == 3 && tm.getMotherRH() != null) {
+                                               out.print(tm.getMotherRH());
+                                           }%>">
                             </div>                            
                         </div>
                         <div class="fields">
                             <div class="six wide field">
                                 <label>Telefono:</label>
-                                <input type="number" name="mPhone" id="mPhone" placeholder="">
+                                <input type="number" name="mPhone" id="mPhone" placeholder="" 
+                                       value="<%if (code == 3) {
+                                               out.print(tm.getMotherPhone());
+                                           }%>">
                             </div>
                             <div class="ten wide field">
                                 <label>Correo:</label>
-                                <input type="email" name="mEmail" id="mEmail" placeholder="example@example.com">
+                                <input type="email" name="mEmail" id="mEmail" placeholder="example@example.com" 
+                                       value="<%if (code == 3 && tm.getMotherEmail() != null) {
+                                               out.print(tm.getMotherEmail());
+                                           }%>">
                             </div>
                         </div>                        
                         <div class="field">
                             <label>Direccion de Recidencia</label>
                             <input type="text" name="mDirection" placeholder="Direccion - Torre - Apartamento" id="mDirection" 
-                                   value="<%if (code == 3) {
-                                           out.print(tm.getKidDirection());
+                                   value="<%if (code == 3 && tm.getMotherDirection() != null) {
+                                           out.print(tm.getMotherDirection());
                                        }%>">
                         </div>                        
                         <div class="inline fields" id="radioEmployer">
                             <label>Condicion Laboral:</label>
                             <div class="field">
                                 <div class="ui radio checkbox employ">
-                                    <input type="radio" name="empleo" value="1" tabindex="0" class="hidden">
+                                    <input type="radio" name="empleo" value="1" tabindex="0" class="hidden" 
+                                           <%if (code == 3 && tm.getMotherEmployer() == 1) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>Empleado</label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox employ">
-                                    <input type="radio" name="empleo" value="2" tabindex="0" class="hidden">
+                                    <input type="radio" name="empleo" value="2" tabindex="0" class="hidden" 
+                                           <%if (code == 3 && tm.getMotherEmployer() == 2) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>Desempleado</label>
                                 </div>
                             </div>
@@ -376,11 +422,17 @@
                             <div class="fields">
                                 <div class="ten wide field">
                                     <label>Cargo o labor realizada:</label>
-                                    <input type="text" name="mEmployerType" id="mEmployerType" placeholder="Analista, Ingenier@, Contador@, ... etc">
+                                    <input type="text" name="mEmployerType" id="mEmployerType" placeholder="Analista, Ingenier@, Contador@, ... etc" 
+                                           value="<%if (code == 3 && tm.getMotherEmployerType() != null) {
+                                                   out.print(tm.getMotherEmployerType());
+                                               }%>">
                                 </div>
                                 <div class="six wide field">
                                     <label>Salario:</label>
-                                    <input type="number" name="mSalary" id="mSalary" placeholder="2000000">
+                                    <input type="number" name="mSalary" id="mSalary" placeholder="2000000" 
+                                           value="<%if (code == 3 && tm.getMotherSalary() != 0) {
+                                                   out.print(tm.getMotherSalary());
+                                               }%>">
                                 </div>
                             </div>
                         </div>
@@ -406,10 +458,16 @@
                             <label>Nombres:</label>
                             <div class="two fields">
                                 <div class="field">
-                                    <input type="text" name="fName" id="fName" placeholder="Primer Nombre">
+                                    <input type="text" name="fName" id="fName" placeholder="Primer Nombre" 
+                                           value="<%if (code == 3 && tm.getFatherName() != null) {
+                                                   out.print(tm.getFatherName());
+                                               }%>">
                                 </div>
                                 <div class="field">
-                                    <input type="text" name="fName2" id="fName2" placeholder="Segundo Nombre">
+                                    <input type="text" name="fName2" id="fName2" placeholder="Segundo Nombre" 
+                                           value="<%if (code == 3 && tm.getFatherNam2() != null) {
+                                                   out.print(tm.getFatherNam2());
+                                               }%>">
                                 </div>
                             </div>                            
                         </div>
@@ -417,10 +475,16 @@
                             <label>Apellidos:</label>
                             <div class="two fields">
                                 <div class="field">
-                                    <input type="text" name="fLastName" id="fLastName" placeholder="Primer Apellido">
+                                    <input type="text" name="fLastName" id="fLastName" placeholder="Primer Apellido" 
+                                           value="<%if (code == 3 && tm.getFatherLastname() != null) {
+                                                   out.print(tm.getFatherLastname());
+                                               }%>">
                                 </div>
                                 <div class="field">
-                                    <input type="text" name="fLastName2" id="fLastName2" placeholder="Segundo Apellido">
+                                    <input type="text" name="fLastName2" id="fLastName2" placeholder="Segundo Apellido" 
+                                           value="<%if (code == 3 && tm.getFatherLastname2() != null) {
+                                                   out.print(tm.getFatherLastname2());
+                                               }%>">
                                 </div>
                             </div>
                         </div>
@@ -432,8 +496,8 @@
                                         <div class="ui input left icon">
                                             <i class="calendar icon"></i>
                                             <input type="text" placeholder="Fecha" readonly="true" id="fDate" name="fDate" 
-                                                   value="<%if (code == 3 && tm.getKidDate() != null) {
-                                                           out.print(tm.getKidDate().toString());
+                                                   value="<%if (code == 3 && tm.getFatherDate() != null) {
+                                                           out.print(tm.getFatherDate().toString());
                                                        }%>">
                                         </div>
                                     </div>
@@ -443,7 +507,7 @@
                                     <div class="ui selection dropdown">
                                         <input type="hidden" name="fLugarNacimiento" id="fLugarNacimiento" 
                                                value="<%if (code == 3) {
-                                                       out.print(tm.getKidBirthLocation());
+                                                       out.print(tm.getFatherBirthLocation());
                                                    }%>">
                                         <i class="dropdown icon"></i>
                                         <div class="default text" data-value="0">Seleccione...</div>
@@ -459,7 +523,10 @@
                             <div class="four wide field">
                                 <label>Tipo de Documento:</label>
                                 <div class="ui selection dropdown">
-                                    <input type="hidden" name="fDocumentType" id="fDocumentType">
+                                    <input type="hidden" name="fDocumentType" id="fDocumentType" 
+                                           value="<%if (code == 3) {
+                                                   out.print(tm.getFatherDocumentType());
+                                               }%>">
                                     <i class="dropdown icon"></i>
                                     <div class="default text" data-value="0">Seleccione...</div>
                                     <div class="menu">
@@ -471,41 +538,61 @@
                             </div>
                             <div class="six wide field">
                                 <label>Numero de Documento:</label>
-                                <input type="text" name="fDocument" id="fDocument" placeholder="">
+                                <input type="text" name="fDocument" id="fDocument" placeholder="" 
+                                       value="<%if (code == 3 && tm.getFatherDocument() != null) {
+                                               out.print(tm.getFatherDocument());
+                                           }%>">
                             </div>                            
                             <div class="six wide field">
                                 <label>RH:</label>
-                                <input type="text" name="fRH" id="fRH" placeholder="">
+                                <input type="text" name="fRH" id="fRH" placeholder="" 
+                                       value="<%if (code == 3 && tm.getFatherRH() != null) {
+                                               out.print(tm.getFatherRH());
+                                           }%>">
                             </div>                            
                         </div>
                         <div class="fields">
                             <div class="six wide field">
                                 <label>Telefono:</label>
-                                <input type="number" name="fPhone" id="fPhone" placeholder="">
+                                <input type="number" name="fPhone" id="fPhone" placeholder="" 
+                                       value="<%if (code == 3) {
+                                               out.print(tm.getFatherPhone());
+                                           }%>">
                             </div>
                             <div class="ten wide field">
                                 <label>Correo:</label>
-                                <input type="email" name="fEmail" id="fEmail" placeholder="example@example.com">
+                                <input type="email" name="fEmail" id="fEmail" placeholder="example@example.com" 
+                                       value="<%if (code == 3 && tm.getFatherEmail() != null) {
+                                               out.print(tm.getFatherEmail());
+                                           }%>">
                             </div>
                         </div>
                         <div class="field">
                             <label>Direccion de Recidencia</label>
                             <input type="text" name="fDirection" placeholder="Direccion - Torre - Apartamento" id="fDirection" 
-                                   value="<%if (code == 3) {
-                                           out.print(tm.getKidDirection());
+                                   value="<%if (code == 3 && tm.getFatherDirection() != null) {
+                                           out.print(tm.getFatherDirection());
                                        }%>">
                         </div>
                         <div class="inline fields" id="fradioEmployer">
                             <label>Condicion Laboral:</label>
                             <div class="field">
                                 <div class="ui radio checkbox employ">
-                                    <input type="radio" name="fempleo" value="1" tabindex="0" class="hidden">
+                                    <input type="radio" name="fempleo" value="1" tabindex="0" class="hidden" 
+                                           <%if (code == 3 && tm.getFatherEmployer() == 2) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>Empleado</label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox employ">
-                                    <input type="radio" name="fempleo" value="2" tabindex="0" class="hidden">
+                                    <input type="radio" name="fempleo" value="2" tabindex="0" class="hidden" 
+                                           <%if (code == 3 && tm.getFatherEmployer() == 2) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>Desempleado</label>
                                 </div>
                             </div>
@@ -515,11 +602,17 @@
                             <div class="fields">
                                 <div class="ten wide field">
                                     <label>Cargo o labor realizada:</label>
-                                    <input type="text" name="fEmployerType" id="fEmployerType" placeholder="Analista, Ingenier@, Contador@, ... etc">
+                                    <input type="text" name="fEmployerType" id="fEmployerType" placeholder="Analista, Ingenier@, Contador@, ... etc" 
+                                           value="<%if (code == 3 && tm.getFatherEmployerType() != null) {
+                                                   out.print(tm.getFatherEmployerType());
+                                               }%>">
                                 </div>
                                 <div class="six wide field">
                                     <label>Salario:</label>
-                                    <input type="number" name="fSalary" id="fSalary" placeholder="2000000">
+                                    <input type="number" name="fSalary" id="fSalary" placeholder="2000000" 
+                                           value="<%if (code == 3 && tm.getFatherSalary() != 0) {
+                                                   out.print(tm.getFatherSalary());
+                                               }%>">
                                 </div>
                             </div>
                         </div>
@@ -545,10 +638,16 @@
                             <label>Nombres:</label>
                             <div class="two fields">
                                 <div class="field">
-                                    <input type="text" name="aName" id="aName" placeholder="Primer Nombre">
+                                    <input type="text" name="aName" id="aName" placeholder="Primer Nombre" 
+                                           value="<%if (code == 3 && tm.getAcudientName() != null) {
+                                                   out.print(tm.getAcudientName());
+                                               }%>">
                                 </div>
                                 <div class="field">
-                                    <input type="text" name="aName2" id="aName2" placeholder="Segundo Nombre">
+                                    <input type="text" name="aName2" id="aName2" placeholder="Segundo Nombre" 
+                                           value="<%if (code == 3 && tm.getAcudientNam2() != null) {
+                                                   out.print(tm.getAcudientNam2());
+                                               }%>">
                                 </div>
                             </div>                            
                         </div>
@@ -556,10 +655,16 @@
                             <label>Apellidos:</label>
                             <div class="two fields">
                                 <div class="field">
-                                    <input type="text" name="aLastName" id="aLastName" placeholder="Primer Apellido">
+                                    <input type="text" name="aLastName" id="aLastName" placeholder="Primer Apellido" 
+                                           value="<%if (code == 3 && tm.getAcudientLastname() != null) {
+                                                   out.print(tm.getAcudientLastname());
+                                               }%>">
                                 </div>
                                 <div class="field">
-                                    <input type="text" name="aLastName2" id="aLastName2" placeholder="Segundo Apellido">
+                                    <input type="text" name="aLastName2" id="aLastName2" placeholder="Segundo Apellido" 
+                                           value="<%if (code == 3 && tm.getAcudientLastname2() != null) {
+                                                   out.print(tm.getAcudientLastname2());
+                                               }%>">
                                 </div>
                             </div>
                         </div>
@@ -572,7 +677,7 @@
                                             <i class="calendar icon"></i>
                                             <input type="text" placeholder="Fecha" readonly="true" id="aDate" name="aDate" 
                                                    value="<%if (code == 3 && tm.getKidDate() != null) {
-                                                           out.print(tm.getKidDate().toString());
+                                                           out.print(tm.getAcudientDate().toString());
                                                        }%>">
                                         </div>
                                     </div>
@@ -582,7 +687,7 @@
                                     <div class="ui selection dropdown">
                                         <input type="hidden" name="aLugarNacimiento" id="aLugarNacimiento" 
                                                value="<%if (code == 3) {
-                                                       out.print(tm.getKidBirthLocation());
+                                                       out.print(tm.getAcudientBirthLocation());
                                                    }%>">
                                         <i class="dropdown icon"></i>
                                         <div class="default text" data-value="0">Seleccione...</div>
@@ -601,7 +706,7 @@
                                 <div class="ui selection dropdown">
                                     <input type="hidden" name="aDocumentType" id="aDocumentType" 
                                            value="<%if (code == 3) {
-                                                   out.print(tm.getKidDocumentType());
+                                                   out.print(tm.getAcudientDocumentType());
                                                }%>">
                                     <i class="dropdown icon"></i>
                                     <div class="default text" data-value="0">Seleccione...</div>
@@ -615,15 +720,15 @@
                             <div class="six wide field">
                                 <label>Numero de Documento:</label>
                                 <input type="text" name="aDocument" placeholder="" id="aDocument" 
-                                       value="<%if (code == 3) {
-                                               out.print(tm.getKidDocument());
+                                       value="<%if (code == 3 && tm.getAcudientDocument() != null) {
+                                               out.print(tm.getAcudientDocument());
                                            }%>">
                             </div>                            
                             <div class="two wide field">
                                 <label>RH:</label>
                                 <input type="text" name="aRH" maxlength="3" placeholder="" id="aRH" 
-                                       value="<%if (code == 3) {
-                                               out.print(tm.getKidRH());
+                                       value="<%if (code == 3 && tm.getAcudientRH() != null) {
+                                               out.print(tm.getAcudientRH());
                                            }%>">
                             </div>
                             <div class="four wide field">
@@ -631,7 +736,7 @@
                                 <div class="ui selection dropdown">
                                     <input type="hidden" name="aGenero" id="aGenero" 
                                            value="<%if (code == 3) {
-                                                   out.print(tm.getKidGenero());
+                                                   out.print(tm.getAcudientGender());
                                                }%>">
                                     <i class="dropdown icon"></i>
                                     <div class="default text" data-value="0">Seleccione...</div>
@@ -645,18 +750,24 @@
                         <div class="fields">
                             <div class="six wide field">
                                 <label>Telefono:</label>
-                                <input type="number" name="aPhone" id="aPhone" placeholder="">
+                                <input type="number" name="aPhone" id="aPhone" placeholder="" 
+                                       value="<%if (code == 3) {
+                                               out.print(tm.getAcudientPhone());
+                                           }%>">
                             </div>
                             <div class="ten wide field">
                                 <label>Correo:</label>
-                                <input type="email" name="aEmail" id="aEmail" placeholder="example@example.com">
+                                <input type="email" name="aEmail" id="aEmail" placeholder="example@example.com" 
+                                       value="<%if (code == 3 && tm.getAcudientEmail() != null) {
+                                               out.print(tm.getAcudientEmail());
+                                           }%>">
                             </div>
                         </div>
                         <div class="field">
                             <label>Direccion de Recidencia</label>
                             <input type="text" name="aDirection" placeholder="Direccion - Torre - Apartamento" id="aDirection" 
-                                   value="<%if (code == 3) {
-                                           out.print(tm.getKidDirection());
+                                   value="<%if (code == 3 && tm.getAcudientDirection() != null) {
+                                           out.print(tm.getAcudientDirection());
                                        }%>">
                         </div>   
 
@@ -664,7 +775,10 @@
                         <div class="field">
                             <label>Parentezco:</label>
                             <div class="ui selection dropdown">
-                                <input type="hidden" name="parentezco" id="parentezco">
+                                <input type="hidden" name="parentezco" id="parentezco" 
+                                       value="<%if (code == 3) {
+                                               out.print(tm.getAcudientParentezco());
+                                           }%>">
                                 <i class="dropdown icon"></i>
                                 <div class="default text">Seleccione...</div>
                                 <div class="menu">
@@ -680,7 +794,10 @@
                             <div class="field">
                                 <label>¿Condicion de desplazamiento?</label>
                                 <div class="ui selection dropdown">
-                                    <input type="hidden" name="desplazamiento" id="desplazamiento">
+                                    <input type="hidden" name="desplazamiento" id="desplazamiento"  
+                                           value="<%if (code == 3) {
+                                                   out.print(tm.getAcudientCondicionDesp());
+                                               }%>">
                                     <i class="dropdown icon"></i>
                                     <div class="default text" data-value="0">Seleccione...</div>
                                     <div class="menu">
@@ -694,7 +811,10 @@
                             <div class="field">                                
                                 <label>¿Pertenece a algun grupo etnico?</label>
                                 <div class="ui selection dropdown">
-                                    <input type="hidden" name="grupoE" id="grupoE">
+                                    <input type="hidden" name="grupoE" id="grupoE"  
+                                           value="<%if (code == 3) {
+                                                   out.print(tm.getAcudientGE());
+                                               }%>">
                                     <i class="dropdown icon"></i>
                                     <div class="default text" data-value="0">Seleccione...</div>
                                     <div class="menu">
@@ -710,13 +830,21 @@
                             <label for="fruit">¿Pertenece a RED UNIDOS?</label>
                             <div class="field">
                                 <div class="ui radio checkbox form4">
-                                    <input type="radio" name="redUnidos" value="0" tabindex="0" class="hidden">
+                                    <input type="radio" name="redUnidos" value="0" tabindex="0" class="hidden" 
+                                           <%if (code == 3 && tm.getAcudientRU() == 0) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>NO</label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox form4">
-                                    <input type="radio" name="redUnidos" value="1" tabindex="0" class="hidden">
+                                    <input type="radio" name="redUnidos" value="1" tabindex="0" class="hidden" 
+                                           <%if (code == 3 && tm.getAcudientRU() == 1) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>SI</label>
                                 </div>
                             </div>                            
@@ -726,13 +854,21 @@
                             <label for="fruit">¿Pertenece a FAMILIAS EN ACCION?</label>
                             <div class="field">
                                 <div class="ui radio checkbox form4">
-                                    <input type="radio" name="fAccion" tabindex="0" value="0" class="hidden">
+                                    <input type="radio" name="fAccion" tabindex="0" value="0" class="hidden" 
+                                           <%if (code == 3 && tm.getAcudientFA() == 0) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>NO</label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox form4">
-                                    <input type="radio" name="fAccion" tabindex="0" value="1" class="hidden">
+                                    <input type="radio" name="fAccion" tabindex="0" value="1" class="hidden" 
+                                           <%if (code == 3 && tm.getAcudientFA() == 1) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>SI</label>
                                 </div>
                             </div>                            
@@ -742,13 +878,21 @@
                             <label>Condicion Laboral:</label>
                             <div class="field">
                                 <div class="ui radio checkbox employ">
-                                    <input type="radio" name="aempleo" value="1" tabindex="0" class="hidden">
+                                    <input type="radio" name="aempleo" value="1" tabindex="0" class="hidden" 
+                                           <%if (code == 3 && tm.getAcudientEmployer() == 1) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>Empleado</label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="ui radio checkbox employ">
-                                    <input type="radio" name="aempleo" value="2" tabindex="0" class="hidden">
+                                    <input type="radio" name="aempleo" value="2" tabindex="0" class="hidden" 
+                                           <%if (code == 3 && tm.getAcudientEmployer() == 2) {
+                                           %>checked="checked"<%
+                                               }
+                                           %>>
                                     <label>Desempleado</label>
                                 </div>
                             </div>
@@ -758,11 +902,17 @@
                             <div class="fields">
                                 <div class="ten wide field">
                                     <label>Cargo o labor realizada:</label>
-                                    <input type="text" name="aEmployerType" id="aEmployerType" placeholder="Analista, Ingenier@, Contador@, ... etc">
+                                    <input type="text" name="aEmployerType" id="aEmployerType" placeholder="Analista, Ingenier@, Contador@, ... etc"  
+                                           value="<%if (code == 3 && tm.getAcudientEmployerType() != null) {
+                                                   out.print(tm.getAcudientEmployerType());
+                                               }%>">
                                 </div>
                                 <div class="six wide field">
                                     <label>Salario:</label>
-                                    <input type="number" name="aSalary" id="aSalary" placeholder="2000000">
+                                    <input type="number" name="aSalary" id="aSalary" placeholder="2000000"  
+                                           value="<%if (code == 3 && tm.getAcudientSalary() != 0) {
+                                                   out.print(tm.getAcudientSalary());
+                                               }%>">
                                 </div>
                             </div>
                         </div>
@@ -780,20 +930,26 @@
                 <!-- Attached Form-->
                 <div class="ui bottom attached tab segment" data-tab="fifth">
                     <form class="ui form matriculaFormAtt" method="post" action="FileController" enctype="multipart/form-data">
-                        <input hidden="" value="" id="idRegistro2" name="idRegistro2">
+                        <input hidden="" id="idRegistro2" name="idRegistro2" 
+                               value="<%if (code == 3) {
+                                       out.print(tm.getId_tempMatricula());
+                                   }%>">
                         <div class="ui error message"></div>
                         <h3 class="ui dividing header">
                             Archivos adjuntos:
                         </h3>
                         <h4 class="ui header">Aspirante:</h4>
-                        <!--<form method="post" action="FileController" enctype="multipart/form-data">-->
-                        <input  hidden="true" value="0" id="idRegistro" name="idRegistro">
+                        <!--<form method="post" action="FileController" enctype="multipart/form-data">
+                        <input  hidden="true" value="0" id="idRegistro" name="idRegistro">-->
                         <div class="two fields">
                             <div class="field">
                                 <label>Foto Aspirante:</label>
 
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentFotoAs() != null) {
+                                                   out.print(tm.getAttachmentFotoAs());
+                                               }%>">
                                     <input type="file" accept="image/*" id="file" name="file" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -803,7 +959,10 @@
                             <div class="field">
                                 <label>Registro Civil:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>                                    
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentRegistroCivil() != null) {
+                                                   out.print(tm.getAttachmentRegistroCivil());
+                                               }%>">                                    
                                     <input type="file" accept="application/pdf" id="file2" name="file2" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -815,7 +974,10 @@
                             <div class="field">
                                 <label>Certificado EPS:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentCertificadoEps() != null) {
+                                                   out.print(tm.getAttachmentCertificadoEps());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file3" name="file3" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -825,7 +987,10 @@
                             <div class="field">
                                 <label>Carnet Vacunas:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentCertificadoVac() != null) {
+                                                   out.print(tm.getAttachmentCertificadoVac());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file4" name="file4" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -836,7 +1001,10 @@
                         <div class="field">
                             <label>Certificado Crecimiento Desarrollo:</label>
                             <div class="ui action mini input upDocument">
-                                <input type="text" placeholder="Subir archivo..." readonly>
+                                <input type="text" placeholder="Subir archivo..." readonly  
+                                       value="<%if (code == 3 && tm.getAttachmentCertificadoCre() != null) {
+                                               out.print(tm.getAttachmentCertificadoCre());
+                                           }%>">
                                 <input type="file" accept="application/pdf" id="file5" name="file5" size="30">
                                 <div class="ui icon disabled button">
                                     <i class="attach icon"></i>
@@ -847,7 +1015,10 @@
                             <div class="field">
                                 <label>Examen Medico General:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly   
+                                           value="<%if (code == 3 && tm.getAttachmentExamMedGen() != null) {
+                                                   out.print(tm.getAttachmentExamMedGen());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file6" name="file6" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -857,7 +1028,10 @@
                             <div class="field">
                                 <label>Examen Visual:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentExamVis() != null) {
+                                                   out.print(tm.getAttachmentExamVis());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file7" name="file7" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -869,7 +1043,10 @@
                             <div class="field">
                                 <label>Examen Auditivo:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentExamAud() != null) {
+                                                   out.print(tm.getAttachmentExamAud());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file8" name="file8" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -879,7 +1056,10 @@
                             <div class="field">
                                 <label>Examen Odontologico:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentExamOdon() != null) {
+                                                   out.print(tm.getAttachmentExamOdon());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file9" name="file9" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -892,7 +1072,10 @@
                             <div class="field">
                                 <label>Cedula Madre:</label>
                                 <div class="ui action mini input upDocument" id="inputFileM">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentCedulaMadre() != null) {
+                                                   out.print(tm.getAttachmentCedulaMadre());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file10" name="file10" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -902,7 +1085,10 @@
                             <div class="field">
                                 <label>Carta Laboral Madre:</label>
                                 <div class="ui action mini input upDocument" id="inputFileM2">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentCartaLaboMad() != null) {
+                                                   out.print(tm.getAttachmentCartaLaboMad());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file11" name="file11" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -914,7 +1100,10 @@
                             <div class="field">
                                 <label>Cedula Padre:</label>
                                 <div class="ui action mini input upDocument" id="inputFileP">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentCedulaPadre() != null) {
+                                                   out.print(tm.getAttachmentCedulaPadre());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file12" name="file12" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -924,7 +1113,10 @@
                             <div class="field">
                                 <label>Carta Laboral Padre:</label>
                                 <div class="ui action mini input upDocument" id="inputFileP2">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentCartaLaboPad() != null) {
+                                                   out.print(tm.getAttachmentCartaLaboPad());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file13" name="file13" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -936,7 +1128,10 @@
                             <div class="field">
                                 <label>Recibo Publico Residencia:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentReciboPublico() != null) {
+                                                   out.print(tm.getAttachmentReciboPublico());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file14" name="file14" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -946,7 +1141,10 @@
                             <div class="field">
                                 <label>Extrajuicio:</label>
                                 <div class="ui action mini input upDocument">
-                                    <input type="text" placeholder="Subir archivo..." readonly>
+                                    <input type="text" placeholder="Subir archivo..." readonly  
+                                           value="<%if (code == 3 && tm.getAttachmentExtrajuicio() != null) {
+                                                   out.print(tm.getAttachmentExtrajuicio());
+                                               }%>">
                                     <input type="file" accept="application/pdf" id="file15" name="file15" size="30">
                                     <div class="ui icon disabled button">
                                         <i class="attach icon"></i>
@@ -1380,6 +1578,26 @@
                         break;
                 }
             }
+            
+            function getViewsFamChecked() {
+                res = $('#radioFamilyCondition').find('[name="familyCon"]:checked').val();
+                switch (res) {
+                    case "1":
+                        $('a[data-tab="third"]').addClass('disabled');
+                        $('a[data-tab="second"]').removeClass('disabled');
+                        $('.form.matriculaFormP').form('destroy');
+                        break;
+                    case "2":
+                        $('a[data-tab="second"]').addClass('disabled');
+                        $('a[data-tab="third"]').removeClass('disabled');
+                        $('.form.matriculaFormM').form('destroy');
+                        break;
+                    case "3":
+                        $('a[data-tab="second"]').removeClass('disabled');
+                        $('a[data-tab="third"]').removeClass('disabled');
+                        break;
+                }
+            }
 
             $(document).ready(function () {
                 //Load default forms validators
@@ -1426,29 +1644,15 @@
                     checkForm5();
                 });
 
-            });
+                getViewsFamChecked();
+
+            });           
 
             $('.radio.checkbox.form4').checkbox();
 
             $('.ui.radio.checkbox.optional').checkbox({
                 onChecked: function () {
-                    res = $('#radioFamilyCondition').find('[name="familyCon"]:checked').val();
-                    switch (res) {
-                        case "1":
-                            $('a[data-tab="third"]').addClass('disabled');
-                            $('a[data-tab="second"]').removeClass('disabled');
-                            $('.form.matriculaFormP').form('destroy');
-                            break;
-                        case "2":
-                            $('a[data-tab="second"]').addClass('disabled');
-                            $('a[data-tab="third"]').removeClass('disabled');
-                            $('.form.matriculaFormM').form('destroy');
-                            break;
-                        case "3":
-                            $('a[data-tab="second"]').removeClass('disabled');
-                            $('a[data-tab="third"]').removeClass('disabled');
-                            break;
-                    }
+                    getViewsFamChecked();
                 }
             });
 

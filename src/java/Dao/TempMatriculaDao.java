@@ -370,8 +370,9 @@ public class TempMatriculaDao implements ITempMatriculaDao {
             }
             System.out.println(query);
             System.out.println(st);
-            //st.execute();
-            st.executeUpdate();
+            //st.execute();            
+            int result = st.executeUpdate();
+            System.out.println(result);
             response = 1;
         } catch (SQLException ex) {
             System.out.println("Ha ocurrido un error al actualizar el registro: " + ex.getMessage());
@@ -401,12 +402,15 @@ public class TempMatriculaDao implements ITempMatriculaDao {
     @Override
     public TempMatricula buscar(int id_tempMatricula) {
         TempMatricula tm = null;
-        try {
-            Conexion.getConexion().setAutoCommit(false);
+        PreparedStatement st = null;
+        Statement statement = null;
+        ResultSet rs = null;
+        try {            
+            Conexion.getConexion();
             String sql = "SELECT * FROM " + Constantes.TABLE_TEMPMATRICULA + " WHERE " + Constantes.TABLE_TEMPMATRICULA_IDREGISTRO + " = ?";
-            PreparedStatement st = Conexion.getConexion().prepareStatement(sql);
+            st = Conexion.getConexion().prepareStatement(sql);
             st.setInt(1, id_tempMatricula);
-            ResultSet rs = st.executeQuery();
+            rs = st.executeQuery();
             System.out.println(sql);
             System.out.println(st);
             while (rs.next()) {
@@ -426,14 +430,77 @@ public class TempMatriculaDao implements ITempMatriculaDao {
                 tm.setKidGenero(rs.getInt(Constantes.TABLE_TEMPMATRICULA_KIDGENERO));
 
                 tm.setMotherName(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERNAME));
+                tm.setMotherNam2(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERNAME2));
                 tm.setMotherLastname(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERLASTNAME));
+                tm.setMotherLastname2(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERLASTNAME2));
                 tm.setMotherDate(rs.getDate(Constantes.TABLE_TEMPMATRICULA_MOTHERDATE));
+                tm.setMotherBirthLocation(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERBIRTHLOCATION));
                 tm.setMotherDocumentType(rs.getInt(Constantes.TABLE_TEMPMATRICULA_MOTHERDOCUMENTTYPE));
                 tm.setMotherDocument(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERDOCUMENT));
-                tm.setMotherDirection(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERDIRECTION));
+                tm.setMotherRH(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERRH));
                 tm.setMotherPhone(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERPHONE));
                 tm.setMotherEmail(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHEREMAIL));
-                                
+                tm.setMotherDirection(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHERDIRECTION));
+                tm.setMotherEmployer(rs.getInt(Constantes.TABLE_TEMPMATRICULA_MOTHEREMPLOYER));
+                tm.setMotherEmployerType(rs.getString(Constantes.TABLE_TEMPMATRICULA_MOTHEREMPLOYERTYPE));
+                tm.setMotherSalary(rs.getDouble(Constantes.TABLE_TEMPMATRICULA_MOTHERSALARY));
+
+                tm.setFatherName(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERNAME));
+                tm.setFatherNam2(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERNAME2));
+                tm.setFatherLastname(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERLASTNAME));
+                tm.setFatherLastname2(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERLASTNAME2));
+                tm.setFatherDate(rs.getDate(Constantes.TABLE_TEMPMATRICULA_FATHERDATE));
+                tm.setFatherBirthLocation(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERBIRTHLOCATION));
+                tm.setFatherDocumentType(rs.getInt(Constantes.TABLE_TEMPMATRICULA_FATHERDOCUMENTTYPE));
+                tm.setFatherDocument(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERDOCUMENT));
+                tm.setFatherRH(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERRH));
+                tm.setFatherPhone(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERPHONE));
+                tm.setFatherEmail(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHEREMAIL));
+                tm.setFatherDirection(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHERDIRECTION));
+                tm.setFatherEmployer(rs.getInt(Constantes.TABLE_TEMPMATRICULA_FATHEREMPLOYER));
+                tm.setFatherEmployerType(rs.getString(Constantes.TABLE_TEMPMATRICULA_FATHEREMPLOYERTYPE));
+                tm.setFatherSalary(rs.getDouble(Constantes.TABLE_TEMPMATRICULA_FATHERSALARY));
+
+                tm.setAcudientName(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTNAME));
+                tm.setAcudientNam2(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTNAME2));
+                tm.setAcudientLastname(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTLASTNAME));
+                tm.setAcudientLastname2(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTLASTNAME2));
+                tm.setAcudientDate(rs.getDate(Constantes.TABLE_TEMPMATRICULA_ACUDIENTDATE));
+                tm.setAcudientBirthLocation(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTBIRTHLOCATION));
+                tm.setAcudientDocumentType(rs.getInt(Constantes.TABLE_TEMPMATRICULA_ACUDIENTDOCUMENTTYPE));
+                tm.setAcudientDocument(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTDOCUMENT));
+                tm.setAcudientRH(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTRH));
+                tm.setAcudientGender(rs.getInt(Constantes.TABLE_TEMPMATRICULA_ACUDIENTGENDER));
+                tm.setAcudientPhone(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTPHONE));
+                tm.setAcudientEmail(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTEMAIL));
+                tm.setAcudientDirection(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTDIRECTION));
+                tm.setAcudientParentezco(rs.getInt(Constantes.TABLE_TEMPMATRICULA_ACUDIENTPARANTEZCO));
+                tm.setAcudientCondicionDesp(rs.getInt(Constantes.TABLE_TEMPMATRICULA_ACUDIENTCONDES));
+                tm.setAcudientGE(rs.getInt(Constantes.TABLE_TEMPMATRICULA_ACUDIENTGRUETN));
+                tm.setAcudientRU(rs.getInt(Constantes.TABLE_TEMPMATRICULA_ACUDIENTREDU));
+                tm.setAcudientFA(rs.getInt(Constantes.TABLE_TEMPMATRICULA_ACUDIENTFAMACC));
+                tm.setAcudientEmployer(rs.getInt(Constantes.TABLE_TEMPMATRICULA_ACUDIENTEMPLOYER));
+                tm.setAcudientEmployerType(rs.getString(Constantes.TABLE_TEMPMATRICULA_ACUDIENTEMPLOYERTYPE));
+                tm.setAcudientSalary(rs.getDouble(Constantes.TABLE_TEMPMATRICULA_ACUDIENTSALARY));
+
+                tm.setAttachmentFotoAs(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTFOTOA));
+                tm.setAttachmentRegistroCivil(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTREGISTROCIVIL));
+                tm.setAttachmentCertificadoEps(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTCERTIFICADOEPS));
+                tm.setAttachmentCertificadoVac(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTCARNETVACUNAS));
+                tm.setAttachmentCertificadoCre(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTCERTIFICADODES));
+                tm.setAttachmentExamMedGen(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTEXAMMEDGEN));
+                tm.setAttachmentExamVis(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTEXAMVIS));
+                tm.setAttachmentExamAud(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTEXAMAUD));
+                tm.setAttachmentExamOdon(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTEXAMODO));
+                tm.setAttachmentCedulaMadre(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTCEDULAMADRE));
+                tm.setAttachmentCartaLaboMad(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTCARTALABORALM));
+                tm.setAttachmentCedulaPadre(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTCEDULAPADRE));
+                tm.setAttachmentCartaLaboPad(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTCARTALABORALP));
+                tm.setAttachmentReciboPublico(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTRECIBOPUBLICO));
+                tm.setAttachmentExtrajuicio(rs.getString(Constantes.TABLE_TEMPMATRICULA_ATTACHMENTEXTRAJUICIOCAFAM));
+
+                tm.setMotherStatus(rs.getInt(Constantes.TABLE_TEMPMATRICULA_MOTHERSTATUS));
+                tm.setFatherStatus(rs.getInt(Constantes.TABLE_TEMPMATRICULA_FATHERSTATUS));
                 tm.setFormStatus(rs.getInt(Constantes.TABLE_TEMPMATRICULA_FORMSTATUS));
             }
         } catch (SQLException ex) {
@@ -444,6 +511,18 @@ public class TempMatriculaDao implements ITempMatriculaDao {
             Logger.getLogger(TempMatriculaDao.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             System.out.println("Exeption: " + ex.getMessage());
+        } finally {
+            try {
+                //Conexion.getConexion().close();
+                if (st != null) {
+                    st.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                System.out.println("Hubo un error intentando cerrar la conexion: " + e.getMessage());
+            }
         }
         return tm;
     }
